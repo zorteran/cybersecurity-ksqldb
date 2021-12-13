@@ -1,0 +1,18 @@
+CREATE TABLE packetbeat_flows_by_1m WITH (KEY_FORMAT='JSON') AS
+    SELECT
+    source -> ip as srcip,
+    source -> port as srcport,
+    destination -> ip as dstip,
+    destination -> port as dstport,
+    network -> transport,
+    SUM(source -> packets) as source_packets,
+    SUM(source -> bytes) as source_bytes,
+    SUM(destination -> packets) as destination_packets,
+    SUM(destination -> bytes) as destination_bytes,
+    SUM(network -> packets) as network_packets,
+    SUM(network -> bytes) as network_bytes,
+    COUNT(*) as cnt
+FROM packetbeat_flows
+WINDOW TUMBLING (SIZE 1 MINUTE)
+GROUP BY source->ip, source-> port, destination->ip, destination->port, network->transport
+  EMIT CHANGES;

@@ -1,0 +1,29 @@
+CREATE STREAM packetbeat (
+    "@timestamp" VARCHAR,
+    "type" VARCHAR,
+    destination STRUCT <
+        packets INT,
+        bytes INT,
+        mac VARCHAR,
+        ip VARCHAR,
+        port INT
+    >,
+    source STRUCT <
+        packets INT,
+        bytes INT,
+        mac VARCHAR,
+        ip VARCHAR,
+        port INT
+    >,
+    network STRUCT <
+        community_id VARCHAR,
+        bytes INT,
+        packets INT,
+        "type" VARCHAR,
+        transport VARCHAR
+    >
+) WITH (
+    kafka_topic='packetbeat',
+    value_format='json',
+    partitions=1
+    );

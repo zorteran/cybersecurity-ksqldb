@@ -1,0 +1,9 @@
+CREATE TABLE packetbeat_flow_unique_dest_by_srcip AS
+    SELECT
+    source -> ip as srcip,
+    COUNT_DISTINCT(destination -> ip) as unique_dstip_cnt,
+    COUNT_DISTINCT(destination -> port) as unique_dstport_cnt
+FROM packetbeat_flows
+WINDOW TUMBLING (SIZE 1 MINUTE, GRACE PERIOD 1 MINUTE)
+GROUP BY source->ip
+  EMIT CHANGES;

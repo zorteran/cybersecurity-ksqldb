@@ -1,0 +1,9 @@
+CREATE STREAM packetbeat_renamed AS
+  SELECT 
+  "@timestamp" as ts,
+  destination,
+  source,
+  network,
+  "type" as flow_type
+  FROM packetbeat
+  EMIT CHANGES;
